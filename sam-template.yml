@@ -1,8 +1,8 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: 'AWS::Serverless-2016-10-31'
-Description: A simple AWS Lambda for searching book records within a DynamoDB table.
+Description: A simple AWS Lambda for getting all sets
 Resources:
-  GetBooksFx:
+  GetSetsFx:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: target/get-set-1.0-SNAPSHOT.jar
