@@ -6,7 +6,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: target/get-set-1.0-SNAPSHOT.jar
-      Handler: com.revature.get_sets.GetHandler
+      Handler: com.revature.get_sets.GetSetHandler
       Runtime: java8.al2
       Description: Java function
       MemorySize: 256
