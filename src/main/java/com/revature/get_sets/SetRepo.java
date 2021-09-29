@@ -1,33 +1,43 @@
 package com.revature.get_sets;
 
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBQueryExpression;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression;
-import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;
+import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
+import software.amazon.awssdk.enhanced.dynamodb.TableSchema;
+import software.amazon.awssdk.enhanced.dynamodb.model.PageIterable;
+import software.amazon.awssdk.http.apache.ApacheHttpClient;
+import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
+
 
 public class SetRepo {
 
-    private final DynamoDBMapper dbReader;
+//    private final DynamoDBMapper dbReader;
+    private final DynamoDbTable<Set> setTable;
 
-    public SetRepo(){
-        dbReader = new DynamoDBMapper(AmazonDynamoDBClientBuilder.defaultClient());
+    public SetRepo() {
+//        this.dbReader = dbReader;
+        DynamoDbClient db = DynamoDbClient.builder().httpClient(ApacheHttpClient.create()).build();
+        DynamoDbEnhancedClient dbClient = DynamoDbEnhancedClient.builder().dynamoDbClient(db).build();
+        setTable = dbClient.table("books", TableSchema.fromBean(Set.class));
     }
 
-    public List<SetDto> getAllSets(){
 
-        Map<String, AttributeValue> queryInputs = new HashMap<>();
-        DynamoDBScanExpression query = new DynamoDBScanExpression()
-                .withExpressionAttributeValues(queryInputs);
+    public SetRepo(DynamoDbTable<Set> bookTable){
+        this.setTable = bookTable;
+//        dbReader = new DynamoDBMapper(AmazonDynamoDBClientBuilder.defaultClient());
+    }
 
-        List<SetDto> results = dbReader.scan(SetDto.class, query);
 
-        return results;
+
+    public PageIterable<Set> getAllSets(){
+
+//        Map<String, AttributeValue> queryInputs = new HashMap<>();
+//        DynamoDBScanExpression query = new DynamoDBScanExpression()
+//                .withExpressionAttributeValues(queryInputs);
+//
+//        List<Set> results = dbReader.scan(Set.class, query);
+
+        return setTable.scan();
 
     }
 
