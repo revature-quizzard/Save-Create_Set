@@ -64,7 +64,8 @@ public class GetHandler implements RequestHandler<APIGatewayProxyRequestEvent, A
 
         //Does this give a Username or Id?
         try{
-            System.out.println(apiGatewayProxyRequestEvent.getRequestContext().getIdentity());
+            System.out.println(apiGatewayProxyRequestEvent.getRequestContext().getAuthorizer());
+            System.out.println(apiGatewayProxyRequestEvent.getRequestContext().getAuthorizer().get("cognito:username"));
         } catch(Exception e){
             System.out.println(e);
         }
