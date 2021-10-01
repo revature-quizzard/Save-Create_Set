@@ -50,7 +50,7 @@ public class GetHandler implements RequestHandler<APIGatewayProxyRequestEvent, A
 
         List<String> queryValues = new ArrayList<>();
         List<String> pathValues = new ArrayList<>();
-        if(apiGatewayProxyRequestEvent.getQueryStringParameters().keySet() != null) {
+        if(apiGatewayProxyRequestEvent.getQueryStringParameters() != null) {
             logger.log("RECEIVED EVENT: " + apiGatewayProxyRequestEvent.getQueryStringParameters().keySet());
             queryValues = apiGatewayProxyRequestEvent.getQueryStringParameters().keySet().stream().collect(Collectors.toList());
             pathValues = apiGatewayProxyRequestEvent.getPathParameters().keySet().stream().collect(Collectors.toList());
