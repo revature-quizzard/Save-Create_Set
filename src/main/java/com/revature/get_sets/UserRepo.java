@@ -28,7 +28,7 @@ public class UserRepo {
     public UserRepo() {
         DynamoDbClient db = DynamoDbClient.builder().httpClient(ApacheHttpClient.create()).build();
         DynamoDbEnhancedClient dbClient = DynamoDbEnhancedClient.builder().dynamoDbClient(db).build();
-        userTable = dbClient.table("User", TableSchema.fromBean(User.class));
+        userTable = dbClient.table("Users", TableSchema.fromBean(User.class));
 
     }
 

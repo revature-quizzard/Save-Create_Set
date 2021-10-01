@@ -35,7 +35,7 @@ public class SetRepo {
     public SetRepo() {
         DynamoDbClient db = DynamoDbClient.builder().httpClient(ApacheHttpClient.create()).build();
         DynamoDbEnhancedClient dbClient = DynamoDbEnhancedClient.builder().dynamoDbClient(db).build();
-        setTable = dbClient.table("Set", TableSchema.fromBean(Set.class));
+        setTable = dbClient.table("Sets", TableSchema.fromBean(Set.class));
 
     }
 
