@@ -7,6 +7,7 @@ import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
 import com.revature.documents.Set;
 import com.revature.documents.SetDto;
 import com.revature.documents.User;
@@ -14,6 +15,7 @@ import software.amazon.awssdk.enhanced.dynamodb.model.PageIterable;
 
 import java.sql.Array;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -65,8 +67,10 @@ public class GetHandler implements RequestHandler<APIGatewayProxyRequestEvent, A
         //Does this give a Username or Id?
         try{
             System.out.println("IDENTITY: " + apiGatewayProxyRequestEvent.getRequestContext().getIdentity());
-            System.out.println("AUTHORIZER: " + apiGatewayProxyRequestEvent.getRequestContext().getAuthorizer());
-            System.out.println("COGNITO: " + apiGatewayProxyRequestEvent.getRequestContext().getAuthorizer().get("cognito:username"));
+            System.out.println("AUTHORIZER: " + apiGatewayProxyRequestEvent.getRequestContext().getAuthorizer().get("claims"));
+
+            Object item = apiGatewayProxyRequestEvent.getRequestContext().getAuthorizer().get("claims");
+            System.out.println("PLZ: " + mapper.fromJson((JsonElement) item, HashMap.class));
         } catch(Exception e){
             System.out.println(e);
         }
