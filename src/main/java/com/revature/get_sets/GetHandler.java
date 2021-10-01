@@ -12,6 +12,7 @@ import com.revature.documents.SetDto;
 import com.revature.documents.User;
 import software.amazon.awssdk.enhanced.dynamodb.model.PageIterable;
 
+import java.sql.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -46,14 +47,22 @@ public class GetHandler implements RequestHandler<APIGatewayProxyRequestEvent, A
 
         LambdaLogger logger = context.getLogger();
         APIGatewayProxyResponseEvent responseEvent = new APIGatewayProxyResponseEvent();
-        logger.log("RECEIVED EVENT: " + apiGatewayProxyRequestEvent.getQueryStringParameters().keySet());
 
-        //Just casting to list to avoid using Set which collides with our Set name...
-        List<String> queryValues = apiGatewayProxyRequestEvent.getQueryStringParameters().keySet().stream().collect(Collectors.toList());
-        List<String> pathValues = apiGatewayProxyRequestEvent.getPathParameters().keySet().stream().collect(Collectors.toList());
+        List<String> queryValues = new ArrayList<>();
+        List<String> pathValues = new ArrayList<>();
+        if(apiGatewayProxyRequestEvent.getQueryStringParameters().keySet() != null) {
+            logger.log("RECEIVED EVENT: " + apiGatewayProxyRequestEvent.getQueryStringParameters().keySet());
+            queryValues = apiGatewayProxyRequestEvent.getQueryStringParameters().keySet().stream().collect(Collectors.toList());
+            pathValues = apiGatewayProxyRequestEvent.getPathParameters().keySet().stream().collect(Collectors.toList());
+        }
 
-        System.out.println(queryValues);
-        System.out.println(pathValues);
+
+
+        //Does this give a Username or Id?
+        System.out.println(apiGatewayProxyRequestEvent.getRequestContext().getIdentity().getUser());
+
+        String username = apiGatewayProxyRequestEvent.getRequestContext().getIdentity().getUser();
+        logger.log(username);
 
         if (pathValues.contains("id")) {
 
