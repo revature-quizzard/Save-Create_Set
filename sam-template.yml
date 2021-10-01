@@ -6,7 +6,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: target/get-set-1.0-SNAPSHOT.jar
-      Handler: com.revature.get_sets.GetSetHandler
+      Handler: com.revature.get_sets.GetHandler
       Runtime: java8.al2
       Description: Java function
       MemorySize: 256
@@ -14,5 +14,4 @@ Resources:
       Tracing: Active
       Policies:
         - arn:aws:iam::011217676466:policy/dynamo-full-access
-
 
