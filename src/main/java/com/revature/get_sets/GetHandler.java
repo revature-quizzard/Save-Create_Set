@@ -64,7 +64,7 @@ public class GetHandler implements RequestHandler<APIGatewayProxyRequestEvent, A
 
         //Does this give a Username or Id?
         try{
-            System.out.println(apiGatewayProxyRequestEvent.getRequestContext().getIdentity().getAccountId());
+            System.out.println(apiGatewayProxyRequestEvent.getRequestContext().getIdentity());
         } catch(Exception e){
             System.out.println(e);
         }
