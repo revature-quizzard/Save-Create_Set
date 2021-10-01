@@ -17,6 +17,7 @@ import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 public class SetRepo {
@@ -55,9 +56,9 @@ public class SetRepo {
     }
 
 
-    public PageIterable<Set> getAllSets(){
+    public List<Set> getAllSets(){
 
-        return setTable.scan();
+        return setTable.scan().items().stream().collect(Collectors.toList());
     }
 
 

@@ -11,6 +11,7 @@ import com.google.gson.JsonElement;
 import com.revature.documents.Set;
 import com.revature.documents.SetDto;
 import com.revature.documents.User;
+import com.revature.exceptions.ResourceNotFoundException;
 import software.amazon.awssdk.enhanced.dynamodb.model.PageIterable;
 
 import java.sql.Array;
@@ -64,16 +65,13 @@ public class GetHandler implements RequestHandler<APIGatewayProxyRequestEvent, A
         }
 
 
-
+        User caller = null;
         //Does this give a Username or Id?
         try{
-            System.out.println("IDENTITY: " + apiGatewayProxyRequestEvent.getRequestContext().getIdentity());
-            System.out.println("AUTHORIZER: " + apiGatewayProxyRequestEvent.getRequestContext().getAuthorizer().get("claims"));
-
             Object item = apiGatewayProxyRequestEvent.getRequestContext().getAuthorizer().get("claims");
-            System.out.println("ITEM: " + item);
             LinkedHashMap casted = (LinkedHashMap) item;
-            System.out.println("SUB: " + casted.get("sub"));
+            String caller_id = (String) casted.get("sub");
+            caller = userRepo.getUserById(caller_id);
         } catch(Exception e){
             System.out.println(e);
         }
@@ -88,11 +86,18 @@ public class GetHandler implements RequestHandler<APIGatewayProxyRequestEvent, A
             String id = apiGatewayProxyRequestEvent.getPathParameters().get("id");
 
             try {
-                Set sets = setRepo.getSetById(id);
-                responseEvent.setBody(mapper.toJson(sets));
+                Set set = setRepo.getSetById(id);
+                if(caller.getUsername().equals(set.getAuthor()) || set.isPublic()) {
+                    responseEvent.setBody(mapper.toJson(set));
+                } else {
+                    throw new ResourceNotFoundException();
+                }
+            } catch (ResourceNotFoundException e) {
+                responseEvent.setStatusCode(400);
+                return responseEvent;
             } catch (Exception e) {
-                System.out.println(e.getMessage());
-                logger.log(e.getMessage());
+                responseEvent.setStatusCode(500);
+                return responseEvent;
             }
 
 
@@ -115,52 +120,22 @@ public class GetHandler implements RequestHandler<APIGatewayProxyRequestEvent, A
 //                logger.log(e.getMessage());
 //            }
 
-
-
-
-
-        } else if (queryValues.contains("user_id")) {
-
-
-            String user_id = null;
-            try {
-                user_id = apiGatewayProxyRequestEvent.getQueryStringParameters().get("user_id");
-                User users = userRepo.getSetById(user_id);
-                responseEvent.setBody(mapper.toJson(users.getCreatedSets()));
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-                logger.log(e.getMessage());
-            }
-
-
-
-
         } else {
             System.out.println("get all sets in the DB");
             List<SetDto> respBody = new ArrayList<>();
 
             try {
-                PageIterable<Set> sets = setRepo.getAllSets();
-                sets.stream().forEach(page -> page.items().forEach(set -> {
+                List<Set> sets = setRepo.getAllSets();
+                List<Set> result = new ArrayList<>();
 
-                    //this turns the tag object into a list of strings
-                    List<String> tags = new ArrayList<>();
+                //Filter out private sets owned by other users
+                for(Set s : sets) {
+                    if(caller.getUsername().equals(s.getAuthor()) || s.isPublic()) {
+                        result.add(s);
+                    }
+                }
 
-                    logger.log("Set:" + set + "\n");
-                    respBody.add(SetDto.builder()
-                            .setName(set.getSetName())
-                            .tags(set.getTags())
-                            .cards(set.getCards())
-                            .author(set.getAuthor())
-                            .isPublic(set.isPublic())
-                            .views(set.getViews())
-                            .plays(set.getPlays())
-                            .studies(set.getStudies())
-                            .favorites(set.getFavorites()).build());
-
-                }));
-                responseEvent.setBody(mapper.toJson(respBody));
-
+                responseEvent.setBody(mapper.toJson(result));
 
             } catch (Exception e) {
                 System.out.println(e.getMessage());
