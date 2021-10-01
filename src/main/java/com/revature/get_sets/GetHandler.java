@@ -15,10 +15,7 @@ import com.revature.exceptions.ResourceNotFoundException;
 import software.amazon.awssdk.enhanced.dynamodb.model.PageIterable;
 
 import java.sql.Array;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class GetHandler implements RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> {
@@ -51,6 +48,10 @@ public class GetHandler implements RequestHandler<APIGatewayProxyRequestEvent, A
 
         LambdaLogger logger = context.getLogger();
         APIGatewayProxyResponseEvent responseEvent = new APIGatewayProxyResponseEvent();
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Access-Control-Allow-Headers", "Content-Type,X-Amz-Date,Authorization");
+        headers.put("Access-Control-Allow-Origin", "*");
+        responseEvent.setHeaders(headers);
 
         List<String> queryValues = new ArrayList<>();
         List<String> pathValues = new ArrayList<>();
