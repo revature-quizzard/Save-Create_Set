@@ -53,13 +53,21 @@ public class GetHandler implements RequestHandler<APIGatewayProxyRequestEvent, A
         if(apiGatewayProxyRequestEvent.getQueryStringParameters() != null) {
             logger.log("RECEIVED EVENT: " + apiGatewayProxyRequestEvent.getQueryStringParameters().keySet());
             queryValues = apiGatewayProxyRequestEvent.getQueryStringParameters().keySet().stream().collect(Collectors.toList());
+        }
+
+        if(apiGatewayProxyRequestEvent.getPathParameters() != null) {
+            logger.log("RECEIVED EVENT: " + apiGatewayProxyRequestEvent.getPathParameters().keySet());
             pathValues = apiGatewayProxyRequestEvent.getPathParameters().keySet().stream().collect(Collectors.toList());
         }
 
 
 
         //Does this give a Username or Id?
-        //System.out.println(apiGatewayProxyRequestEvent.getRequestContext().getIdentity().getUser());
+        try{
+            System.out.println(apiGatewayProxyRequestEvent.getRequestContext().getIdentity().getUser());
+        } catch(Exception e){
+            System.out.println(e);
+        }
 
         //String username = apiGatewayProxyRequestEvent.getRequestContext().getIdentity().getUser();
         //logger.log(username);
