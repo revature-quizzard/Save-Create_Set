@@ -17,7 +17,7 @@ public class SetDto {
     */
 
     private String id;
-    private String name;
+    private String setName;
     private List<Tag> tags;
     private List<Card> cards;
     private String author;
@@ -36,12 +36,12 @@ public class SetDto {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getSetName() {
+        return setName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setSetName(String setName) {
+        this.setName = setName;
     }
 
     public List<Tag> getTags() {

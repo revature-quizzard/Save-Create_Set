@@ -12,34 +12,24 @@ import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbParti
 public class Tag {
 
 
-    private String name;
-    private String color;
+    private String tagName;
+    private String tagColor;
 
     @DynamoDbPartitionKey
-    public String getName() {
-        return name;
+    public String getTagName() {
+        return tagName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setTagName(String tagName) {
+        this.tagName = tagName;
     }
 
-    @DynamoDbAttribute("color")
-    public String getColor() {
-        return color;
+    public String getTagColor() {
+        return tagColor;
     }
 
-    public void setColor(String color) {
-        this.color = color;
+    public void setTagColor(String tagColor) {
+        this.tagColor = tagColor;
     }
-
-    public Tag(String name){
-        this.name = name;
-    }
-
-    public Tag() {
-        super();
-    }
-
 }
 

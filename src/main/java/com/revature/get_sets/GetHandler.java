@@ -17,11 +17,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class GetHandler implements RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> {
-
-    //TODO change the models to have no underscore for the value names
-
-
-
     private static final Gson mapper = new GsonBuilder().setPrettyPrinting().create();
     private final SetRepo setRepo;
     private final UserRepo userRepo;
@@ -37,8 +32,6 @@ public class GetHandler implements RequestHandler<APIGatewayProxyRequestEvent, A
         this.userRepo = userRepo;
     }
 
-
-
     /**
      *  This if else statement will check if the apiGatewayProxyRequestEvent.getQueryStringParameters().keySet().toString()
      *   is one of the parameters to look for sets. If none of these match then it will return all Sets.
@@ -48,7 +41,6 @@ public class GetHandler implements RequestHandler<APIGatewayProxyRequestEvent, A
      * @author Jose Tejada
      */
 
-
     @Override
     public APIGatewayProxyResponseEvent handleRequest(APIGatewayProxyRequestEvent apiGatewayProxyRequestEvent, Context context) {
 
@@ -56,15 +48,18 @@ public class GetHandler implements RequestHandler<APIGatewayProxyRequestEvent, A
         APIGatewayProxyResponseEvent responseEvent = new APIGatewayProxyResponseEvent();
         logger.log("RECEIVED EVENT: " + apiGatewayProxyRequestEvent.getQueryStringParameters().keySet());
 
-        String parmValue = apiGatewayProxyRequestEvent.getQueryStringParameters().keySet().toString();
+        //Just casting to list to avoid using Set which collides with our Set name...
+        List<String> queryValues = apiGatewayProxyRequestEvent.getQueryStringParameters().keySet().stream().collect(Collectors.toList());
+        List<String> pathValues = apiGatewayProxyRequestEvent.getPathParameters().keySet().stream().collect(Collectors.toList());
 
+        System.out.println(queryValues);
+        System.out.println(pathValues);
 
-
-        if ("[id]".equals(parmValue)) {
+        if (pathValues.contains("id")) {
 
 
             System.out.println("will return list of sets that match the tags");
-            String id = apiGatewayProxyRequestEvent.getQueryStringParameters().get("id");
+            String id = apiGatewayProxyRequestEvent.getPathParameters().get("id");
 
             try {
                 Set sets = setRepo.getSetById(id);
@@ -76,7 +71,7 @@ public class GetHandler implements RequestHandler<APIGatewayProxyRequestEvent, A
 
 
 
-        } else if ("[tags]".equals(parmValue)) {
+        } else if (queryValues.contains("tags")) {
             //TODO finish implementing getSet by tags.
 
 //           String tags = apiGatewayProxyRequestEvent.getQueryStringParameters().get("tags");
@@ -98,14 +93,14 @@ public class GetHandler implements RequestHandler<APIGatewayProxyRequestEvent, A
 
 
 
-        } else if ("[user_id]".equals(parmValue)) {
+        } else if (queryValues.contains("user_id")) {
 
 
             String user_id = null;
             try {
                 user_id = apiGatewayProxyRequestEvent.getQueryStringParameters().get("user_id");
                 User users = userRepo.getSetById(user_id);
-                responseEvent.setBody(mapper.toJson(users.getCreated_sets()));
+                responseEvent.setBody(mapper.toJson(users.getCreatedSets()));
             } catch (Exception e) {
                 System.out.println(e.getMessage());
                 logger.log(e.getMessage());
@@ -115,13 +110,8 @@ public class GetHandler implements RequestHandler<APIGatewayProxyRequestEvent, A
 
 
         } else {
-
-
             System.out.println("get all sets in the DB");
             List<SetDto> respBody = new ArrayList<>();
-
-
-
 
             try {
                 PageIterable<Set> sets = setRepo.getAllSets();
@@ -132,15 +122,15 @@ public class GetHandler implements RequestHandler<APIGatewayProxyRequestEvent, A
 
                     logger.log("Set:" + set + "\n");
                     respBody.add(SetDto.builder()
-                            .name(set.getSet_name())
+                            .setName(set.getSetName())
                             .tags(set.getTags())
                             .cards(set.getCards())
                             .author(set.getAuthor())
-                            .isPublic(set.is_public())
+                            .isPublic(set.isPublic())
                             .views(set.getViews())
                             .plays(set.getPlays())
-                            .studies(set.getStudies()).
-                            favorites(set.getFavorites()).build());
+                            .studies(set.getStudies())
+                            .favorites(set.getFavorites()).build());
 
                 }));
                 responseEvent.setBody(mapper.toJson(respBody));

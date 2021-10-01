@@ -11,6 +11,7 @@ import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbParti
 public class Card {
 
     private String id;
+    private String setId;
     private String question;
     private String answer;
 
@@ -23,7 +24,14 @@ public class Card {
         this.id = id;
     }
 
-    @DynamoDbAttribute("question")
+    public String getSetId() {
+        return setId;
+    }
+
+    public void setSetId(String setId) {
+        this.setId = setId;
+    }
+
     public String getQuestion() {
         return question;
     }
@@ -32,7 +40,6 @@ public class Card {
         this.question = question;
     }
 
-    @DynamoDbAttribute("answer")
     public String getAnswer() {
         return answer;
     }

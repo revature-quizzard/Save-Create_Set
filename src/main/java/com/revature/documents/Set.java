@@ -14,7 +14,7 @@ import java.util.List;
 public class Set {
 
     private String id;
-    private String name;
+    private String setName;
     private List<Tag> tags;
     private List<Card> cards;
     private String author;
@@ -33,12 +33,12 @@ public class Set {
         this.id = id;
     }
 
-    public String getSet_name() {
-        return name;
+    public String getSetName() {
+        return setName;
     }
 
-    public void setSet_name(String set_name) {
-        this.name = set_name;
+    public void setSetName(String setName) {
+        this.setName = setName;
     }
 
     public List<Tag> getTags() {
@@ -65,12 +65,12 @@ public class Set {
         this.author = author;
     }
 
-    public boolean is_public() {
+    public boolean isPublic() {
         return isPublic;
     }
 
-    public void set_public(boolean is_public) {
-        this.isPublic = is_public;
+    public void setPublic(boolean aPublic) {
+        isPublic = aPublic;
     }
 
     public int getViews() {
