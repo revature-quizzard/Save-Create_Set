@@ -16,6 +16,7 @@ import software.amazon.awssdk.enhanced.dynamodb.model.PageIterable;
 import java.sql.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -70,7 +71,9 @@ public class GetHandler implements RequestHandler<APIGatewayProxyRequestEvent, A
             System.out.println("AUTHORIZER: " + apiGatewayProxyRequestEvent.getRequestContext().getAuthorizer().get("claims"));
 
             Object item = apiGatewayProxyRequestEvent.getRequestContext().getAuthorizer().get("claims");
-            System.out.println("PLZ: " + mapper.fromJson((JsonElement) item, HashMap.class));
+            System.out.println("ITEM: " + item);
+            LinkedHashMap casted = (LinkedHashMap) item;
+            System.out.println("SUB: " + casted.get("sub"));
         } catch(Exception e){
             System.out.println(e);
         }
