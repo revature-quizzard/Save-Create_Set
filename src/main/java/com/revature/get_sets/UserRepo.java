@@ -37,7 +37,7 @@ public class UserRepo {
      * @param id
      * @return User
      */
-    public User getSetById(String id){
+    public User getUserById(String id){
 
         AttributeValue val = AttributeValue.builder().s(id).build();
         Expression filter = Expression.builder().expression("#a = :b") .putExpressionName("#a", "id") .putExpressionValue(":b", val).build();
