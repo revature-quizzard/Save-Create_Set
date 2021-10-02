@@ -57,7 +57,6 @@ public class SetRepo {
 
 
     public List<Set> getAllSets(){
-
         return setTable.scan().items().stream().collect(Collectors.toList());
     }
 

@@ -3,6 +3,7 @@ package com.revature.documents;
 
 import lombok.Builder;
 import lombok.Data;
+import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbAttribute;
 
 import java.util.List;
 
@@ -68,6 +69,7 @@ public class SetDto {
         this.author = author;
     }
 
+    @DynamoDbAttribute("isPublic")
     public boolean isPublic() {
         return isPublic;
     }
