@@ -7,14 +7,11 @@ import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
 import com.revature.documents.Set;
 import com.revature.documents.SetDto;
 import com.revature.documents.User;
 import com.revature.exceptions.ResourceNotFoundException;
-import software.amazon.awssdk.enhanced.dynamodb.model.PageIterable;
 
-import java.sql.Array;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -128,14 +125,13 @@ public class GetHandler implements RequestHandler<APIGatewayProxyRequestEvent, A
             try {
                 List<Set> sets = setRepo.getAllSets();
                 List<Set> result = new ArrayList<>();
-
+                System.out.println(sets);
                 //Filter out private sets owned by other users
                 for(Set s : sets) {
-                    if(caller.getUsername().equals(s.getAuthor()) || s.isPublic()) {
+                    if(s.isPublic() || caller.getUsername().equals(s.getAuthor())) {
                         result.add(s);
                     }
                 }
-
                 responseEvent.setBody(mapper.toJson(result));
 
             } catch (Exception e) {
