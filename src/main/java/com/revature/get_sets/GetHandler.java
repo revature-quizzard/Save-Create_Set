@@ -102,7 +102,6 @@ public class GetHandler implements RequestHandler<APIGatewayProxyRequestEvent, A
 
 
         } else if (queryValues.contains("tags")) {
-            //TODO finish implementing getSet by tags.
             List<String> tagNames = mapper.fromJson(apiGatewayProxyRequestEvent.getQueryStringParameters().get("tags"), ArrayList.class );
 
             List<Set> respBody = new ArrayList<>();
