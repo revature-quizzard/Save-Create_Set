@@ -9,9 +9,11 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.revature.documents.Set;
 import com.revature.documents.SetDto;
+import com.revature.documents.Tag;
 import com.revature.documents.User;
 import com.revature.exceptions.ResourceNotFoundException;
 
+import java.sql.Array;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -37,7 +39,7 @@ public class GetHandler implements RequestHandler<APIGatewayProxyRequestEvent, A
      * @param apiGatewayProxyRequestEvent
      * @param context
      * @return APIGatewayProxyResponseEvent
-     * @author Jose Tejada
+     * @author Jose Tejada and Jack Raney
      */
 
     @Override
@@ -71,7 +73,8 @@ public class GetHandler implements RequestHandler<APIGatewayProxyRequestEvent, A
             String caller_id = (String) casted.get("sub");
             caller = userRepo.getUserById(caller_id);
         } catch(Exception e){
-            System.out.println(e);
+            //responseEvent.setStatusCode(401);
+            //return responseEvent;
         }
 
         //String username = apiGatewayProxyRequestEvent.getRequestContext().getIdentity().getUser();
@@ -79,8 +82,6 @@ public class GetHandler implements RequestHandler<APIGatewayProxyRequestEvent, A
 
         if (pathValues.contains("id")) {
 
-
-            System.out.println("will return list of sets that match the tags");
             String id = apiGatewayProxyRequestEvent.getPathParameters().get("id");
 
             try {
@@ -101,22 +102,29 @@ public class GetHandler implements RequestHandler<APIGatewayProxyRequestEvent, A
 
 
         } else if (queryValues.contains("tags")) {
-            //TODO finish implementing getSet by tags.
+            List<String> tagNames = mapper.fromJson(apiGatewayProxyRequestEvent.getQueryStringParameters().get("tags"), ArrayList.class );
 
-//           String tags = apiGatewayProxyRequestEvent.getQueryStringParameters().get("tags");
-//            List<Set> respBody = new ArrayList<>();
-//
-//            try {
-//
-//                logger.log("Tags" + tags);
-//                PageIterable<Set> sets = setRepo.getAllSets();
-//                responseEvent.setBody(mapper.toJson(respBody));
-//
-//
-//            } catch (Exception e) {
-//                System.out.println(e.getMessage());
-//                logger.log(e.getMessage());
-//            }
+            List<Set> respBody = new ArrayList<>();
+
+            try {
+
+                List<Set> sets = setRepo.getAllSets();
+                List<Set> results = new ArrayList<>();
+                for(Set s : sets) {
+                    for(Tag t : s.getTags()) {
+                        if(tagNames.contains(t.getTagName())) {
+                            results.add(s);
+                            break;
+                        }
+                    }
+                }
+                responseEvent.setBody(mapper.toJson(results));
+
+
+            } catch (Exception e) {
+                responseEvent.setStatusCode(500);
+                return responseEvent;
+            }
 
         } else {
             System.out.println("get all sets in the DB");
@@ -135,8 +143,8 @@ public class GetHandler implements RequestHandler<APIGatewayProxyRequestEvent, A
                 responseEvent.setBody(mapper.toJson(result));
 
             } catch (Exception e) {
-                System.out.println(e.getMessage());
-                logger.log(e.getMessage());
+                responseEvent.setStatusCode(500);
+                return responseEvent;
             }}
 
 
