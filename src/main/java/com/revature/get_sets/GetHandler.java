@@ -73,8 +73,8 @@ public class GetHandler implements RequestHandler<APIGatewayProxyRequestEvent, A
             String caller_id = (String) casted.get("sub");
             caller = userRepo.getUserById(caller_id);
         } catch(Exception e){
-            //responseEvent.setStatusCode(401);
-            //return responseEvent;
+            responseEvent.setStatusCode(401);
+            return responseEvent;
         }
 
         //String username = apiGatewayProxyRequestEvent.getRequestContext().getIdentity().getUser();
