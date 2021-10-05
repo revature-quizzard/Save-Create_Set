@@ -52,6 +52,7 @@ public class GetHandler implements RequestHandler<APIGatewayProxyRequestEvent, A
         headers.put("Access-Control-Allow-Origin", "*");
         responseEvent.setHeaders(headers);
 
+        System.out.println("HERE");
         List<String> queryValues = new ArrayList<>();
         List<String> pathValues = new ArrayList<>();
         if(apiGatewayProxyRequestEvent.getQueryStringParameters() != null) {
@@ -59,10 +60,12 @@ public class GetHandler implements RequestHandler<APIGatewayProxyRequestEvent, A
             queryValues = apiGatewayProxyRequestEvent.getQueryStringParameters().keySet().stream().collect(Collectors.toList());
         }
 
+        System.out.println("AFTER QUERY");
         if(apiGatewayProxyRequestEvent.getPathParameters() != null) {
             logger.log("RECEIVED EVENT: " + apiGatewayProxyRequestEvent.getPathParameters().keySet());
             pathValues = apiGatewayProxyRequestEvent.getPathParameters().keySet().stream().collect(Collectors.toList());
         }
+        System.out.println("AFTER PATH");
 
 
         User caller = null;
