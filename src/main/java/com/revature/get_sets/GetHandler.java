@@ -73,15 +73,15 @@ public class GetHandler implements RequestHandler<APIGatewayProxyRequestEvent, A
             String caller_id = (String) casted.get("sub");
             caller = userRepo.getUserById(caller_id);
         } catch(Exception e){
-            //responseEvent.setStatusCode(401);
-            //return responseEvent;
+            responseEvent.setStatusCode(401);
+            return responseEvent;
         }
 
         //String username = apiGatewayProxyRequestEvent.getRequestContext().getIdentity().getUser();
         //logger.log(username);
 
         if (pathValues.contains("id")) {
-
+            System.out.println("IN ID");
             String id = apiGatewayProxyRequestEvent.getPathParameters().get("id");
 
             try {
@@ -95,6 +95,7 @@ public class GetHandler implements RequestHandler<APIGatewayProxyRequestEvent, A
                 responseEvent.setStatusCode(400);
                 return responseEvent;
             } catch (Exception e) {
+                System.out.println(e);
                 responseEvent.setStatusCode(500);
                 return responseEvent;
             }
