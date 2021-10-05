@@ -13,7 +13,6 @@ import com.revature.documents.Tag;
 import com.revature.documents.User;
 import com.revature.exceptions.ResourceNotFoundException;
 
-import java.sql.Array;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -52,7 +51,6 @@ public class GetHandler implements RequestHandler<APIGatewayProxyRequestEvent, A
         headers.put("Access-Control-Allow-Origin", "*");
         responseEvent.setHeaders(headers);
 
-        System.out.println("HERE");
         List<String> queryValues = new ArrayList<>();
         List<String> pathValues = new ArrayList<>();
         if(apiGatewayProxyRequestEvent.getQueryStringParameters() != null) {
@@ -60,12 +58,10 @@ public class GetHandler implements RequestHandler<APIGatewayProxyRequestEvent, A
             queryValues = apiGatewayProxyRequestEvent.getQueryStringParameters().keySet().stream().collect(Collectors.toList());
         }
 
-        System.out.println("AFTER QUERY");
         if(apiGatewayProxyRequestEvent.getPathParameters() != null) {
             logger.log("RECEIVED EVENT: " + apiGatewayProxyRequestEvent.getPathParameters().keySet());
             pathValues = apiGatewayProxyRequestEvent.getPathParameters().keySet().stream().collect(Collectors.toList());
         }
-        System.out.println("AFTER PATH");
 
 
         User caller = null;
@@ -84,7 +80,6 @@ public class GetHandler implements RequestHandler<APIGatewayProxyRequestEvent, A
         //logger.log(username);
 
         if (pathValues.contains("id")) {
-            System.out.println("IN ID");
             String id = apiGatewayProxyRequestEvent.getPathParameters().get("id");
 
             try {
@@ -98,7 +93,6 @@ public class GetHandler implements RequestHandler<APIGatewayProxyRequestEvent, A
                 responseEvent.setStatusCode(400);
                 return responseEvent;
             } catch (Exception e) {
-                System.out.println(e);
                 responseEvent.setStatusCode(500);
                 return responseEvent;
             }
@@ -131,7 +125,6 @@ public class GetHandler implements RequestHandler<APIGatewayProxyRequestEvent, A
             }
 
         } else {
-            System.out.println("get all sets in the DB");
             List<SetDto> respBody = new ArrayList<>();
 
             try {
@@ -152,7 +145,6 @@ public class GetHandler implements RequestHandler<APIGatewayProxyRequestEvent, A
             }}
 
 
-            System.out.println(responseEvent);
             return responseEvent;
 
 

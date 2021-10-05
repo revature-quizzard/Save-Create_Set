@@ -1,6 +1,5 @@
 package com.revature.get_sets;
 
-import com.revature.documents.Set;
 import com.revature.documents.User;
 import com.revature.exceptions.ResourceNotFoundException;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;
